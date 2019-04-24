@@ -36,6 +36,7 @@ const errorHandler = error => {
     notification.error({
       message: '未登录或登录已过期，请重新登录。',
     });
+
     // @HACK
     /* eslint-disable no-underscore-dangle */
     window.g_app._store.dispatch({
@@ -43,19 +44,23 @@ const errorHandler = error => {
     });
     return;
   }
+
   notification.error({
     message: `请求错误 ${status}: ${url}`,
     description: errortext,
   });
+
   // environment should not be used
   if (status === 403) {
     router.push('/exception/403');
     return;
   }
+
   if (status <= 504 && status >= 500) {
     router.push('/exception/500');
     return;
   }
+
   if (status >= 404 && status < 422) {
     router.push('/exception/404');
   }

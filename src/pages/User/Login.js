@@ -1,24 +1,39 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+
 import Link from 'umi/link';
+
 import { Checkbox, Alert, message, Icon } from 'antd';
+
 import Login from '@/components/Login';
+
 import styles from './Login.less';
 
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
+const {
+  Tab, // @/components/index.js 文件中Login.Tab = LoginTab，可以理解为加载的组件为LoginTab.js
+  Submit, // @/components/index.js 文件中Login.Submit = LoginSubmit，可以理解为加载的组件为LoginSubmit.js
+  //以下为LoginItem的组件
+  UserName,
+  Password,
+  Mobile,
+  Captcha,
+  Environment,
+} = Login;
 
 @connect(({ login, loading }) => ({
   login,
   submitting: loading.effects['login/login'],
 }))
+
+//登录页面
 class LoginPage extends Component {
   state = {
     type: 'account',
     autoLogin: true,
   };
 
-  onTabChange = type => {
+  handleTabChange = type => {
     this.setState({ type });
   };
 
@@ -35,22 +50,34 @@ class LoginPage extends Component {
           })
             .then(resolve)
             .catch(reject);
+
           message.warning(formatMessage({ id: 'app.login.verification-code-warning' }));
         }
       });
     });
 
+  //点击“登录”按钮
   handleSubmit = (err, values) => {
     const { type } = this.state;
+
     if (!err) {
       const { dispatch } = this.props;
-      dispatch({
-        type: 'login/login',
-        payload: {
-          ...values,
-          type,
-        },
-      });
+
+      // console.log("values");
+      // console.log(values);
+      // console.log("\n");
+
+      // dispatch({
+      //     type: 'login/login',
+      //     payload: {
+      //         ...values,
+      //         type,
+      //     }
+      // });
+
+      // console.log("values");
+      // console.log(values);
+      // console.log("\n");
     }
   };
 
@@ -67,24 +94,28 @@ class LoginPage extends Component {
   render() {
     const { login, submitting } = this.props;
     const { type, autoLogin } = this.state;
+
     return (
       <div className={styles.main}>
         <Login
           defaultActiveKey={type}
-          onTabChange={this.onTabChange}
+          handleTabChange={this.handleTabChange}
           onSubmit={this.handleSubmit}
           ref={form => {
             this.loginForm = form;
           }}
         >
+          {/* 账户密码登录 */}
           <Tab key="account" tab={formatMessage({ id: 'app.login.tab-login-credentials' })}>
             {login.status === 'error' &&
               login.type === 'account' &&
               !submitting &&
               this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
+
+            {/* 用户名输入框 */}
             <UserName
               name="userName"
-              placeholder={`${formatMessage({ id: 'app.login.userName' })}: admin or user`}
+              placeholder={formatMessage({ id: 'app.login.userName' })}
               rules={[
                 {
                   required: true,
@@ -92,9 +123,13 @@ class LoginPage extends Component {
                 },
               ]}
             />
+
+            {/* 密码输入框 */}
             <Password
               name="password"
-              placeholder={`${formatMessage({ id: 'app.login.password' })}: ant.design`}
+              placeholder={formatMessage({
+                id: 'app.login.password',
+              })}
               rules={[
                 {
                   required: true,
@@ -103,10 +138,24 @@ class LoginPage extends Component {
               ]}
               onPressEnter={e => {
                 e.preventDefault();
-                this.loginForm.validateFields(this.handleSubmit);
+                // this.loginForm.validateFields(this.handleSubmit);
               }}
             />
+
+            {/* 环境下拉框 */}
+            <Environment
+              name="environment"
+              placeholder={formatMessage({ id: 'app.login.environment' })}
+              rules={[
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.environment.required' }),
+                },
+              ]}
+            />
           </Tab>
+
+          {/* 手机号登录 */}
           <Tab key="mobile" tab={formatMessage({ id: 'app.login.tab-login-mobile' })}>
             {login.status === 'error' &&
               login.type === 'mobile' &&
@@ -114,6 +163,7 @@ class LoginPage extends Component {
               this.renderMessage(
                 formatMessage({ id: 'app.login.message-invalid-verification-code' })
               )}
+
             <Mobile
               name="mobile"
               placeholder={formatMessage({ id: 'form.phone-number.placeholder' })}
@@ -128,6 +178,7 @@ class LoginPage extends Component {
                 },
               ]}
             />
+
             <Captcha
               name="captcha"
               placeholder={formatMessage({ id: 'form.verification-code.placeholder' })}
@@ -143,22 +194,30 @@ class LoginPage extends Component {
               ]}
             />
           </Tab>
+
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               <FormattedMessage id="app.login.remember-me" />
             </Checkbox>
+
             <a style={{ float: 'right' }} href="">
               <FormattedMessage id="app.login.forgot-password" />
             </a>
           </div>
+
           <Submit loading={submitting}>
             <FormattedMessage id="app.login.login" />
           </Submit>
+
           <div className={styles.other}>
-            <FormattedMessage id="app.login.sign-in-with" />
-            <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
-            <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
-            <Icon type="weibo-circle" className={styles.icon} theme="outlined" />
+            {/*
+                    <FormattedMessage id="app.login.sign-in-with" />
+                    <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
+                    <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
+
+                    <Icon type="weibo-circle" className={styles.icon} theme="outlined" />
+                    */}
+
             <Link className={styles.register} to="/user/register">
               <FormattedMessage id="app.login.signup" />
             </Link>

@@ -62,4 +62,33 @@ export default {
       },
     ],
   },
+  Environment: {
+    props: {
+      placeholder: 'environment',
+      size: 'large',
+      selectOptions: [
+        {
+          key: 'Production Mode',
+          value: 'Production Mode',
+          name: 'Production Mode',
+        },
+        {
+          key: 'Development Mode',
+          value: 'Development Mode',
+          name: 'Development Mode',
+        },
+        {
+          key: 'Demographic Mode',
+          value: 'Demographic Mode',
+          name: 'Demographic Mode',
+        },
+      ],
+    },
+    rules: [
+      {
+        required: true,
+        message: 'Please enter Environment!',
+      },
+    ],
+  },
 };

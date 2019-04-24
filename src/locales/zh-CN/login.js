@@ -10,6 +10,7 @@ export default {
   'app.login.sign-in-with': '其他登录方式',
   'app.login.signup': '注册账户',
   'app.login.login': '登录',
+  'app.login.environment': '项目环境',
   'app.register.register': '注册',
   'app.register.get-verification-code': '获取验证码',
   'app.login.verification-code-warning':
@@ -37,4 +38,5 @@ export default {
   'validation.date.required': '请选择起止日期',
   'validation.goal.required': '请输入目标描述',
   'validation.standard.required': '请输入衡量标准',
+  'validation.environment.required': '请选择项目环境！',
 };

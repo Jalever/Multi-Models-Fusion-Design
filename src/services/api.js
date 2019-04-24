@@ -103,8 +103,8 @@ export async function updateFakeList(params) {
   });
 }
 
-export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
+export async function accountLogin(params) {
+  return request('http://bosapi-demo.rickricks.com/boscenterservice/account/login', {
     method: 'POST',
     data: params,
   });
